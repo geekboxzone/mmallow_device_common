@@ -30,6 +30,8 @@
 #ifndef BT_VENDOR_RTK_H
 #define BT_VENDOR_RTK_H
 
+#include <string.h>
+#include <memory.h>
 #include "bt_vendor_lib.h"
 #include "vnd_buildcfg.h"
 
