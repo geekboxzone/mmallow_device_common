@@ -52,7 +52,7 @@
 ******************************************************************************/
 
 #ifndef BTHW_DBG
-#define BTHW_DBG FALSE
+#define BTHW_DBG TRUE
 #endif
 
 #if (BTHW_DBG == TRUE)
@@ -1275,6 +1275,8 @@ uint32_t hw_lpm_get_idle_timeout(void)
 
     if (strstr(hw_cfg_cb.local_chip_name, "BCM4325") != NULL)
         timeout_ms *= 25; // 12.5 or 25 ?
+    else if (strstr(hw_cfg_cb.local_chip_name, "BCM4358") != NULL)
+        timeout_ms *= 50;
     else
         timeout_ms *= 300;
 
