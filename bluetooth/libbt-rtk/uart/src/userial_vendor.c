@@ -167,12 +167,13 @@ void userial_ioctl_init_bt_wake(int fd)
 ** Returns         None
 **
 *******************************************************************************/
-void userial_vendor_init(void)
+void userial_vendor_init(char *bt_device_node)
 {
     vnd_userial.fd = -1;
     snprintf(vnd_userial.port_name, VND_PORT_NAME_MAXLEN, "%s", \
-            BLUETOOTH_UART_DEVICE_PORT);
+            bt_device_node);
 }
+
 
 /*******************************************************************************
 **
@@ -248,7 +249,7 @@ int userial_vendor_open(tUSERIAL_CFG *p_cfg)
 
     if(p_cfg->hw_fctrl == USERIAL_HW_FLOW_CTRL_ON)
     {
-        ALOGI("userial vendor open: with HW flowctrl ON");    
+        ALOGI("userial vendor open: with HW flowctrl ON");
         vnd_userial.termios.c_cflag |= (CRTSCTS | stop_bits| parity);
     }
     else
@@ -258,7 +259,7 @@ int userial_vendor_open(tUSERIAL_CFG *p_cfg)
         vnd_userial.termios.c_cflag |= (stop_bits| parity);
 
     }
-    
+
     tcsetattr(vnd_userial.fd, TCSANOW, &vnd_userial.termios);
     tcflush(vnd_userial.fd, TCIOFLUSH);
 
@@ -326,16 +327,16 @@ void userial_vendor_set_baud(uint8_t userial_baud)
     userial_to_tcio_baud(userial_baud, &tcio_baud);
 
     if(cfsetospeed(&vnd_userial.termios, tcio_baud)<0)
-        ALOGE("cfsetospeed fail");    
-    
+        ALOGE("cfsetospeed fail");
+
     if(cfsetispeed(&vnd_userial.termios, tcio_baud)<0)
-        ALOGE("cfsetispeed fail");    
-    
+        ALOGE("cfsetispeed fail");
+
     if(tcsetattr(vnd_userial.fd, TCSANOW, &vnd_userial.termios)<0)
-        ALOGE("tcsetattr fail ");    
+        ALOGE("tcsetattr fail ");
 
     tcflush(vnd_userial.fd, TCIOFLUSH);
-    
+
     ALOGI("userial_vendor_set_baud--");
 }
 
@@ -401,11 +402,11 @@ int userial_set_port(char *p_conf_name, char *p_conf_value, int param)
 *******************************************************************************/
 void userial_vendor_set_hw_fctrl(uint8_t hw_fctrl)
 {
-    struct termios termios_old;    
-    
+    struct termios termios_old;
+
     if (vnd_userial.fd == -1)
     {
-        ALOGE("vnd_userial.fd is -1");    
+        ALOGE("vnd_userial.fd is -1");
         return;
     }
 
@@ -423,7 +424,7 @@ void userial_vendor_set_hw_fctrl(uint8_t hw_fctrl)
             termios_old.c_cflag |= CRTSCTS;
             tcsetattr(vnd_userial.fd, TCSANOW, &termios_old);
             ALOGI("userial_vendor_set_hw_fctrl set hw flowcontrol on");
-        }    
+        }
     }
     else
     {
@@ -438,8 +439,7 @@ void userial_vendor_set_hw_fctrl(uint8_t hw_fctrl)
         {
             ALOGI("userial_vendor_set_hw_fctrl set hw flowcontrol off");
             return;
-        }    
+        }
     }
 
 }
-

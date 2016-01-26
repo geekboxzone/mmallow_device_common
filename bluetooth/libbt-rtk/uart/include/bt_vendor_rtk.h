@@ -30,10 +30,9 @@
 #ifndef BT_VENDOR_RTK_H
 #define BT_VENDOR_RTK_H
 
-#include <string.h>
-#include <memory.h>
 #include "bt_vendor_lib.h"
 #include "vnd_buildcfg.h"
+#include <string.h>
 
 /******************************************************************************
 **  Constants & Macros
@@ -50,8 +49,7 @@
 
 /* Device port name where Bluetooth controller attached */
 #ifndef BLUETOOTH_UART_DEVICE_PORT
-//#define BLUETOOTH_UART_DEVICE_PORT      "/dev/ttyO1"    /* maguro */
-#define BLUETOOTH_UART_DEVICE_PORT      "/dev/ttyS0"    /* rk3x */
+#define BLUETOOTH_UART_DEVICE_PORT      "/dev/ttyO1"    /* maguro */
 #endif
 
 /* Location of firmware patch files */
@@ -80,7 +78,7 @@
  *  firmware patchram (.hcd) file.
  */
 #ifndef USE_CONTROLLER_BDADDR
-#define USE_CONTROLLER_BDADDR   FALSE
+#define USE_CONTROLLER_BDADDR   TRUE //FALSE
 #endif
 
 /* sleep mode
@@ -92,7 +90,7 @@
 #define LPM_SLEEP_MODE                  1
 #endif
 
-/* Host Stack Idle Threshold in 300ms or 25ms 
+/* Host Stack Idle Threshold in 300ms or 25ms
 
   In sleep mode 1, this is the number of firmware loops executed with no
     activity before the Host wake line is deasserted. Activity includes HCI
@@ -210,4 +208,3 @@
 extern bt_vendor_callbacks_t *bt_vendor_cbacks;
 
 #endif /* BT_VENDOR_RTK_H */
-

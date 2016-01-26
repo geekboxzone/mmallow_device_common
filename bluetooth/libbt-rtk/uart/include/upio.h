@@ -104,4 +104,3 @@ int upio_set_bluetooth_power(int on);
 void upio_set(uint8_t pio, uint8_t action, uint8_t polarity);
 
 #endif /* UPIO_H */
-

@@ -32,6 +32,7 @@
 
 #include "bt_vendor_lib.h"
 #include "vnd_buildcfg.h"
+#include <string.h>
 
 /******************************************************************************
 **  Constants & Macros
@@ -47,13 +48,13 @@
 
 /* Device port name where Bluetooth controller attached */
 #ifndef BLUETOOTH_UART_DEVICE_PORT
-#define BLUETOOTH_UART_DEVICE_PORT      "/dev/rtk_btusb"
+#define BLUETOOTH_UART_DEVICE_PORT      "/dev/ttyO1"    /* maguro */
 #endif
 
 /******************************************************************************
 **  Extern variables and functions
 ******************************************************************************/
-void userial_vendor_init(void);
+void userial_vendor_init(char *bt_device_node);
 int userial_vendor_open(void);
 void userial_vendor_close(void);
 

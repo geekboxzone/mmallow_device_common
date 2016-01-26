@@ -130,7 +130,7 @@ typedef enum {
 ** Returns         None
 **
 *******************************************************************************/
-void userial_vendor_init(void);
+void userial_vendor_init(char *bt_device_node);
 
 /*******************************************************************************
 **
@@ -179,4 +179,3 @@ void userial_vendor_ioctl(userial_vendor_ioctl_op_t op, void *p_data);
 void userial_vendor_set_hw_fctrl(uint8_t hw_fctrl);
 
 #endif /* USERIAL_VENDOR_H */
-

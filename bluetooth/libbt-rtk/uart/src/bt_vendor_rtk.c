@@ -36,7 +36,7 @@
 #endif
 
 #if (BTVND_DBG == TRUE)
-#define BTVNDDBG(param, ...) {ALOGD(param, ## __VA_ARGS__);} 
+#define BTVNDDBG(param, ...) {ALOGD(param, ## __VA_ARGS__);}
 #else
 #define BTVNDDBG(param, ...) {}
 #endif
@@ -93,7 +93,7 @@ static int init(const bt_vendor_callbacks_t* p_cb, unsigned char *local_bdaddr)
         return -1;
     }
 
-    userial_vendor_init();
+    userial_vendor_init(BLUETOOTH_UART_DEVICE_PORT);
     upio_init();
 
     /* store reference to user callbacks */
@@ -104,6 +104,7 @@ static int init(const bt_vendor_callbacks_t* p_cb, unsigned char *local_bdaddr)
 
     return 0;
 }
+
 
 
 /** Requested operations */
@@ -123,14 +124,14 @@ static int op(bt_vendor_opcode_t opcode, void *param)
                     upio_set_bluetooth_power(UPIO_BT_POWER_OFF);
                     usleep(200000);
                     BTVNDDBG("set power off and delay 200ms");
-                    
+
                 }
                 else if (*state == BT_VND_PWR_ON)
                 {
                     upio_set_bluetooth_power(UPIO_BT_POWER_ON);
                     usleep(500000);
                     BTVNDDBG("set power on and delay 500ms");
-                    
+
                 }
             }
             break;

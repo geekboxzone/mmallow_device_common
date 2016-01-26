@@ -30,8 +30,9 @@
 #include <errno.h>
 #include <utils/Log.h>
 #include "bt_vendor_rtk.h"
-#include <string.h>
+
 #include <errno.h>
+#include <sys/ioctl.h>
 
 #ifndef BTVND_DBG
 #define BTVND_DBG FALSE
@@ -42,6 +43,12 @@
 #else
 #define BTVNDDBG(param, ...) {}
 #endif
+
+
+
+//Define ioctl cmd the same as HCIDEVUP in the kernel
+#define DOWN_FW_CFG  _IOW('H', 201, int)
+
 
 /******************************************************************************
 **  Local type definitions
@@ -79,7 +86,7 @@ static int init(const bt_vendor_callbacks_t* p_cb, unsigned char *local_bdaddr)
         return -1;
     }
 
-    userial_vendor_init();
+    userial_vendor_init(BLUETOOTH_UART_DEVICE_PORT);
 
     /* store reference to user callbacks */
     bt_vendor_cbacks = (bt_vendor_callbacks_t *) p_cb;
@@ -89,6 +96,7 @@ static int init(const bt_vendor_callbacks_t* p_cb, unsigned char *local_bdaddr)
 
     return 0;
 }
+
 
 
 /** Requested operations */
@@ -108,9 +116,18 @@ static int op(bt_vendor_opcode_t opcode, void *param)
 
         case BT_VND_OP_FW_CFG:
             {
-            	bt_vendor_cbacks->fwcfg_cb(BT_VND_OP_RESULT_SUCCESS);
+				ALOGE("Bt_vendor_rtk Op for BT_VND_OP_FW_CFG");
+				retval = ioctl(vnd_userial.fd, DOWN_FW_CFG, NULL);
+				if(retval>0){
+					ALOGE("Bt_vendor_rtk Download Fw Success");
+					bt_vendor_cbacks->fwcfg_cb(BT_VND_OP_RESULT_SUCCESS);
+				}else{
+					ALOGE("Bt_vendor_rtk Download Fw failed: %s(%d)", strerror(errno), errno);
+					bt_vendor_cbacks->fwcfg_cb(BT_VND_OP_RESULT_FAIL);
+				}
             }
-            break;
+			break;
+
 
         case BT_VND_OP_SCO_CFG:
             {
@@ -156,6 +173,16 @@ static int op(bt_vendor_opcode_t opcode, void *param)
 
         case BT_VND_OP_LPM_WAKE_SET_STATE:
             break;
+
+        case BT_VND_OP_EPILOG:
+            {
+
+					if (bt_vendor_cbacks)
+					{
+						bt_vendor_cbacks->epilog_cb(BT_VND_OP_RESULT_SUCCESS);
+					}
+            }
+            break;
     }
 
     return retval;
@@ -170,12 +197,11 @@ static int op(bt_vendor_opcode_t opcode, void *param)
 ** Returns         None
 **
 *******************************************************************************/
-void userial_vendor_init(void)
+void userial_vendor_init(char *bt_device_node)
 {
     vnd_userial.fd = -1;
     vnd_userial.dev_id = 0;
-    snprintf(vnd_userial.port_name, VND_PORT_NAME_MAXLEN, "%s", \
-            BLUETOOTH_UART_DEVICE_PORT);
+    strcpy(vnd_userial.port_name,bt_device_node);
 }
 
 /*******************************************************************************

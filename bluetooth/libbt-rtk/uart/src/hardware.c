@@ -39,7 +39,6 @@
 #include <ctype.h>
 #include <cutils/properties.h>
 #include <stdlib.h>
-#include <string.h>
 #include "bt_hci_bdroid.h"
 #include "bt_vendor_rtk.h"
 #include "userial.h"
@@ -50,12 +49,12 @@
 #include <byteswap.h>
 
 #include "bt_vendor_lib.h"
-//#include "hci.h"
+
 
 /******************************************************************************
 **  Constants &  Macros
 ******************************************************************************/
-#define RTK_VERSION "3.8"
+#define RTK_VERSION "3.8 with Android6.0"
 #define RTK_8703A_SUPPORT   0  /* 1:support 8703a, 0:not support */
 
 #ifndef BTHW_DBG
@@ -86,8 +85,8 @@
 #error "Unknown byte order"
 #endif
 
-#define FIRMWARE_DIRECTORY  "/system/vendor/firmware/%s"
-#define BT_CONFIG_DIRECTORY "/system/vendor/firmware/%s"
+#define FIRMWARE_DIRECTORY  "/system/etc/firmware/%s"
+#define BT_CONFIG_DIRECTORY "/system/etc/firmware/%s"
 #define PATCH_DATA_FIELD_MAX_SIZE       252
 #define RTK_VENDOR_CONFIG_MAGIC         0x8723ab55
 #define RTK_PATCH_LENGTH_MAX            24576   //24*1024
@@ -270,14 +269,14 @@ typedef struct {
 } patch_info;
 
 static patch_info patch_table[] = {
-    { ROM_LMP_8723a, "rtl8723a_fw", "rtl8723a_config" },    //Rtl8723AS
-    { ROM_LMP_8723b, "rtl8723b_fw", "rtl8723b_config"},     //Rtl8723BS
+    { ROM_LMP_8723a, "rtl8723as_fw", "rtl8723as_config" },    //Rtl8723AS
+    { ROM_LMP_8723b, "rtl8723bs_fw", "rtl8723bs_config"},     //Rtl8723BS
 //  { ROM_LMP_8723b, "rtl8723b_VQ0_fw", "rtl8723b_VQ0_config"}, //Rtl8723BS_VQ0
-    { ROM_LMP_8703a, "rtl8703a_fw", "rtl8703a_config"},     //Rtl8703aS
-    { ROM_LMP_8821a, "rtl8821a_fw", "rtl8821a_config"},     //Rtl8821AS
-    { ROM_LMP_8761a, "rtl8761a_fw", "rtl8761a_config"},     //Rtl8761AW
-    { ROM_LMP_8822b, "rtl8822b_fw", "rtl8822b_config"},     //Rtl8822BS
-    { ROM_LMP_8703b, "rtl8703b_fw", "rtl8703b_config"},     //Rtl8703BS
+    { ROM_LMP_8703a, "rtl8703as_fw", "rtl8703as_config"},     //Rtl8703aS
+    { ROM_LMP_8821a, "rtl8821as_fw", "rtl8821as_config"},     //Rtl8821AS
+    { ROM_LMP_8761a, "rtl8761as_fw", "rtl8761as_config"},     //Rtl8761AW
+    { ROM_LMP_8822b, "rtl8822bs_fw", "rtl8822bs_config"},     //Rtl8822BS
+    { ROM_LMP_8703b, "rtl8703bs_fw", "rtl8703bs_config"},     //Rtl8703BS
     { ROM_LMP_8723cs_xx, "rtl8723cs_xx_fw", "rtl8723cs_xx_config"},     //rtl8723cs_xx
     { ROM_LMP_8723cs_cg, "rtl8723cs_cg_fw", "rtl8723cs_cg_config"},     //rtl8723cs_cg
     { ROM_LMP_8723cs_vf,  "rtl8723cs_vf_fw", "rtl8723cs_vf_config"},     //rtl8723cs_vf
@@ -301,7 +300,7 @@ struct rtk_epatch{
     struct rtk_epatch_entry entry[0];
 } __attribute__ ((packed));
 
-//extern tHCI_IF *p_hci_if;
+
 
 patch_info* get_patch_entry(uint16_t prod_id)
 {
