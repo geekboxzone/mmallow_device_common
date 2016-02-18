@@ -16,7 +16,8 @@ LOCAL_C_INCLUDES += \
         $(BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR)/uart
 
 LOCAL_SHARED_LIBRARIES := \
-        libcutils
+        libcutils \
+        libhardware_legacy
 
 LOCAL_MODULE := libbt-vendor_uart
 LOCAL_MODULE_TAGS := optional

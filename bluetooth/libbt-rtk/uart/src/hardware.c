@@ -243,6 +243,8 @@ static bt_lpm_param_t lpm_param =
     LPM_PULSED_HOST_WAKE
 };
 
+static char bt_chip_type[64];
+
 //signature: realtech
 const uint8_t RTK_EPATCH_SIGNATURE[8]={0x52,0x65,0x61,0x6C,0x74,0x65,0x63,0x68};
 //Extension Section IGNATURE:0x77FD0451
@@ -271,7 +273,7 @@ typedef struct {
 static patch_info patch_table[] = {
     { ROM_LMP_8723a, "rtl8723as_fw", "rtl8723as_config" },    //Rtl8723AS
     { ROM_LMP_8723b, "rtl8723bs_fw", "rtl8723bs_config"},     //Rtl8723BS
-//  { ROM_LMP_8723b, "rtl8723b_VQ0_fw", "rtl8723b_VQ0_config"}, //Rtl8723BS_VQ0
+//  { ROM_LMP_8723b, "rtl8723bs_VQ0_fw", "rtl8723bs_VQ0_config"}, //Rtl8723BS_VQ0
     { ROM_LMP_8703a, "rtl8703as_fw", "rtl8703as_config"},     //Rtl8703aS
     { ROM_LMP_8821a, "rtl8821as_fw", "rtl8821as_config"},     //Rtl8821AS
     { ROM_LMP_8761a, "rtl8761as_fw", "rtl8761as_config"},     //Rtl8761AW
@@ -625,7 +627,10 @@ uint32_t rtk_get_bt_config(unsigned char** config_buf,
     int fd;
     FILE* file = NULL;
 
-    sprintf(bt_config_file_name, BT_CONFIG_DIRECTORY, config_file_short_name);
+    if (strcmp(bt_chip_type, "RTL8723BS_VQ0") == 0)
+        sprintf(bt_config_file_name, BT_CONFIG_DIRECTORY, "rtl8723bs_VQ0_config");
+    else
+        sprintf(bt_config_file_name, BT_CONFIG_DIRECTORY, config_file_short_name);
     ALOGI("BT config file: %s", bt_config_file_name);
 
     if (stat(bt_config_file_name, &st) < 0)
@@ -671,7 +676,10 @@ int rtk_get_bt_firmware(uint8_t** fw_buf, char* fw_short_name)
     size_t fwsize = 0;
     size_t buf_size = 0;
 
-    sprintf(filename, FIRMWARE_DIRECTORY, fw_short_name);
+    if (strcmp(bt_chip_type, "RTL8723BS_VQ0") == 0)
+        sprintf(filename, FIRMWARE_DIRECTORY, "rtl8723bs_VQ0_fw");
+    else
+        sprintf(filename, FIRMWARE_DIRECTORY, fw_short_name);
     ALOGI("BT fw file: %s", filename);
 
     if (stat(filename, &st) < 0)
@@ -1336,6 +1344,9 @@ void hw_config_start(void)
 {
     memset(&hw_cfg_cb, 0, sizeof(bt_hw_cfg_cb_t));
     hw_cfg_cb.dl_fw_flag = 1;
+
+    extern int check_wifi_chip_type_string(char *type);
+    check_wifi_chip_type_string(bt_chip_type);
 
     /* Start from sending H5 SYNC */
     if (bt_vendor_cbacks)
