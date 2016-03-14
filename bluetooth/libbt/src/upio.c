@@ -31,6 +31,8 @@
 #include <utils/Log.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <memory.h>
+#include <string.h>
 #include <cutils/properties.h>
 #include "bt_vendor_brcm.h"
 #include "upio.h"

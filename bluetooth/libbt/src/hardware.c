@@ -40,6 +40,7 @@
 #include <cutils/properties.h>
 #include <stdlib.h>
 #include <string.h>
+#include <memory.h>
 #include "bt_hci_bdroid.h"
 #include "bt_vendor_brcm.h"
 #include "hci_audio.h"
