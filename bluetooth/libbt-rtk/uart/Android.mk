@@ -15,6 +15,11 @@ LOCAL_C_INCLUDES += \
         $(BDROID_DIR)/hci/include \
         $(BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR)/uart
 
+ifeq ($(PRODUCT_BUILD_MODULE), car) 
+LOCAL_CFLAGS += -DRTK_FIRMWARE_RTL8723BS_VQ0_COMBO
+LOCAL_CFLAGS += -DRTK_UART_SHUTDOWN_FLOW_CTRL
+endif
+
 LOCAL_SHARED_LIBRARIES := \
         libcutils \
         libhardware_legacy

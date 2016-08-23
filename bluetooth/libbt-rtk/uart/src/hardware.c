@@ -272,8 +272,11 @@ typedef struct {
 
 static patch_info patch_table[] = {
     { ROM_LMP_8723a, "rtl8723as_fw", "rtl8723as_config" },    //Rtl8723AS
+#ifndef RTK_FIRMWARE_RTL8723BS_VQ0_COMBO
     { ROM_LMP_8723b, "rtl8723bs_fw", "rtl8723bs_config"},     //Rtl8723BS
-//  { ROM_LMP_8723b, "rtl8723bs_VQ0_fw", "rtl8723bs_VQ0_config"}, //Rtl8723BS_VQ0
+#else
+	{ ROM_LMP_8723b, "rtl8723bs_VQ0_fw", "rtl8723bs_VQ0_config"}, //Rtl8723BS_VQ0
+#endif
     { ROM_LMP_8703a, "rtl8703as_fw", "rtl8703as_config"},     //Rtl8703aS
     { ROM_LMP_8821a, "rtl8821as_fw", "rtl8821as_config"},     //Rtl8821AS
     { ROM_LMP_8761a, "rtl8761as_fw", "rtl8761as_config"},     //Rtl8761AW

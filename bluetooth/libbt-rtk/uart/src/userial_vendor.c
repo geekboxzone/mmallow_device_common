@@ -404,6 +404,10 @@ void userial_vendor_set_hw_fctrl(uint8_t hw_fctrl)
 {
     struct termios termios_old;
 
+#ifdef RTK_UART_SHUTDOWN_FLOW_CTRL
+	hw_fctrl = 0;
+#endif
+
     if (vnd_userial.fd == -1)
     {
         ALOGE("vnd_userial.fd is -1");
