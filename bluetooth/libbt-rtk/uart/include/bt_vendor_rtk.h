@@ -78,7 +78,11 @@
  *  firmware patchram (.hcd) file.
  */
 #ifndef USE_CONTROLLER_BDADDR
+#ifdef RTK_FIRMWARE_RTL8723BS_VQ0_COMBO
+#define USE_CONTROLLER_BDADDR   FALSE
+#else
 #define USE_CONTROLLER_BDADDR   TRUE //FALSE
+#endif
 #endif
 
 /* sleep mode
